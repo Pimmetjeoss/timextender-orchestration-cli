@@ -1,0 +1,22 @@
+{
+  "kind": "local-source-checks-not-endpoint-or-live-proof",
+  "toolchain": "go1.26.10",
+  "checked_at": "2026-10-29T14:48:03.064052+00:00",
+  "results": [
+    {
+      "command": "go test -count=1 ./...",
+      "exit_code": 0,
+      "output": "?   \ttimextender-pp-cli/cmd/timextender-pp-cli\t[no test files]\n?   \ttimextender-pp-cli/cmd/timextender-pp-mcp\t[no test files]\n?   \ttimextender-pp-cli/internal/cache\t[no test files]\nok  \ttimextender-pp-cli/internal/cli\t2.918s\n?   \ttimextender-pp-cli/internal/cli/playbooks\t[no test files]\nok  \ttimextender-pp-cli/internal/client\t1.037s\nok  \ttimextender-pp-cli/internal/cliutil\t11.979s\n?   \ttimextender-pp-cli/internal/cliutil/testenv\t[no test files]\nok  \ttimextender-pp-cli/internal/config\t0.023s\nok  \ttimextender-pp-cli/internal/learn\t3.002s\nok  \ttimextender-pp-cli/internal/learn/entities\t0.003s\nok  \ttimextender-pp-cli/internal/learn/lookups\t4.086s\nok  \ttimextender-pp-cli/internal/learn/patterns\t0.268s\nok  \ttimextender-pp-cli/internal/mcp\t0.562s\nok  \ttimextender-pp-cli/internal/mcp/bound\t0.192s\nok  \ttimextender-pp-cli/internal/mcp/cobratree\t4.181s\nok  \ttimextender-pp-cli/internal/platform\t0.091s\nok  \ttimextender-pp-cli/internal/store\t3.235s\n?   \ttimextender-pp-cli/internal/types\t[no test files]\n"
+    },
+    {
+      "command": "go vet ./...",
+      "exit_code": 0,
+      "output": ""
+    },
+    {
+      "command": "go build ./...",
+      "exit_code": 0,
+      "output": ""
+    }
+  ]
+}

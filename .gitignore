@@ -1,0 +1,17 @@
+# Local builds and private configuration
+/build/
+/bin/
+/timextender-pp-cli
+/timextender-pp-mcp
+.env
+.env.*
+!.env.example
+config.toml
+credentials*
+*.key
+*.pem
+*.db
+*.db-*
+*.sqlite*
+.runstate/
+.cache/

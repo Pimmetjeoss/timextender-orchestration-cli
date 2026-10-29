@@ -1,0 +1,122 @@
+[
+  {
+    "method": "GET",
+    "path": "/api/v0/orchestration/workspaces",
+    "operationId": "timextender.orchestration.workspaces.list",
+    "source": "https://support.timextender.com/general-137/timextender-orchestration-api-3946",
+    "list": true,
+    "uat_query": false,
+    "leaf": "orchestration",
+    "source_file": "internal/cli/promoted_orchestration.go",
+    "mcp_tool": "orchestration_list",
+    "test_result": "NOT TESTED: phase 10 validation failed before safety hardening; no live proof"
+  },
+  {
+    "method": "GET",
+    "path": "/api/v0/orchestration/{workspace}/process-maps",
+    "operationId": "timextender.orchestration.maps.list",
+    "source": "https://support.timextender.com/general-137/timextender-orchestration-api-3946",
+    "list": true,
+    "uat_query": true,
+    "leaf": "timextender-orchestration-maps-list <workspace>",
+    "source_file": "internal/cli/orchestration_process-maps_timextender-orchestration-maps-list.go",
+    "mcp_tool": "orchestration_process-maps_timextender-orchestration-maps-list",
+    "test_result": "NOT TESTED: phase 10 validation failed before safety hardening; no live proof"
+  },
+  {
+    "method": "GET",
+    "path": "/api/v0/orchestration/{workspace}/process-maps/{processMapId}/tasks",
+    "operationId": "timextender.orchestration.map-tasks.list",
+    "source": "https://support.timextender.com/general-137/timextender-orchestration-api-3946",
+    "list": true,
+    "uat_query": true,
+    "leaf": "timextender-orchestration-map-tasks-list <workspace> <processMapId>",
+    "source_file": "internal/cli/orchestration_process-maps_timextender-orchestration-map-tasks-list.go",
+    "mcp_tool": "orchestration_process-maps_timextender-orchestration-map-tasks-list",
+    "test_result": "NOT TESTED: phase 10 validation failed before safety hardening; no live proof"
+  },
+  {
+    "method": "POST",
+    "path": "/api/v0/orchestration/{workspace}/process-maps/{processMapId}/trigger",
+    "operationId": "timextender.orchestration.map-trigger.start",
+    "source": "https://support.timextender.com/general-137/timextender-orchestration-api-3946",
+    "list": false,
+    "uat_query": false,
+    "leaf": "timextender-orchestration-map-trigger-start <workspace> <processMapId>",
+    "source_file": "internal/cli/orchestration_process-maps_timextender-orchestration-map-trigger-start.go",
+    "mcp_tool": "orchestration_process-maps_timextender-orchestration-map-trigger-start",
+    "test_result": "NOT TESTED: phase 10 validation failed before safety hardening; no live proof"
+  },
+  {
+    "method": "GET",
+    "path": "/api/v0/orchestration/{workspace}/tasks",
+    "operationId": "timextender.orchestration.tasks.list",
+    "source": "https://support.timextender.com/general-137/timextender-orchestration-api-3946",
+    "list": true,
+    "uat_query": true,
+    "leaf": "list <workspace>",
+    "source_file": "internal/cli/orchestration_tasks_list.go",
+    "mcp_tool": "orchestration_tasks_list",
+    "test_result": "NOT TESTED: phase 10 validation failed before safety hardening; no live proof"
+  },
+  {
+    "method": "GET",
+    "path": "/api/v0/orchestration/{workspace}/tasks/{taskType}/{taskId}",
+    "operationId": "timextender.orchestration.task-details.get",
+    "source": "https://support.timextender.com/general-137/timextender-orchestration-api-3946",
+    "list": false,
+    "uat_query": true,
+    "leaf": "timextender-orchestration-details-get <workspace> <taskId>",
+    "source_file": "internal/cli/orchestration_tasks_timextender-orchestration-details-get.go",
+    "mcp_tool": "orchestration_tasks_timextender-orchestration-details-get",
+    "test_result": "NOT TESTED: phase 10 validation failed before safety hardening; no live proof"
+  },
+  {
+    "method": "POST",
+    "path": "/api/v0/orchestration/{workspace}/tasks/{taskType}/{taskId}/trigger",
+    "operationId": "timextender.orchestration.task-trigger.start",
+    "source": "https://support.timextender.com/general-137/timextender-orchestration-api-3946",
+    "list": false,
+    "uat_query": false,
+    "leaf": "timextender-orchestration-trigger-start <workspace> <taskId>",
+    "source_file": "internal/cli/orchestration_tasks_timextender-orchestration-trigger-start.go",
+    "mcp_tool": "orchestration_tasks_timextender-orchestration-trigger-start",
+    "test_result": "NOT TESTED: phase 10 validation failed before safety hardening; no live proof"
+  },
+  {
+    "method": "GET",
+    "path": "/api/v0/orchestration/{workspace}/executions",
+    "operationId": "timextender.orchestration.executions.list",
+    "source": "https://support.timextender.com/general-137/timextender-orchestration-api-3946",
+    "list": true,
+    "uat_query": true,
+    "leaf": "list <workspace>",
+    "source_file": "internal/cli/orchestration_executions_list.go",
+    "mcp_tool": "orchestration_executions_list",
+    "test_result": "NOT TESTED: phase 10 validation failed before safety hardening; no live proof"
+  },
+  {
+    "method": "GET",
+    "path": "/api/v0/orchestration/{workspace}/tasks/{taskType}/{taskId}/executions",
+    "operationId": "timextender.orchestration.history.list",
+    "source": "https://support.timextender.com/general-137/timextender-orchestration-api-3946",
+    "list": true,
+    "uat_query": true,
+    "leaf": "timextender-orchestration-history-list <workspace> <taskId>",
+    "source_file": "internal/cli/orchestration_tasks_timextender-orchestration-history-list.go",
+    "mcp_tool": "orchestration_tasks_timextender-orchestration-history-list",
+    "test_result": "NOT TESTED: phase 10 validation failed before safety hardening; no live proof"
+  },
+  {
+    "method": "GET",
+    "path": "/api/v0/orchestration/{workspace}/tasks/{taskType}/{taskId}/executions/{execId}/log",
+    "operationId": "timextender.orchestration.logs.list",
+    "source": "https://support.timextender.com/general-137/timextender-orchestration-api-3946",
+    "list": true,
+    "uat_query": false,
+    "leaf": "timextender-orchestration-logs-list <workspace> <taskId> <execId>",
+    "source_file": "internal/cli/orchestration_tasks_timextender-orchestration-logs-list.go",
+    "mcp_tool": "orchestration_tasks_timextender-orchestration-logs-list",
+    "test_result": "NOT TESTED: phase 10 validation failed before safety hardening; no live proof"
+  }
+]

@@ -1,0 +1,1090 @@
+{
+  "openapi": "3.0.3",
+  "info": {
+    "title": "timextender",
+    "version": "0",
+    "description": "DOCUMENTATION-DERIVED, NOT A TENANT SWAGGER EXPORT. Public Orchestration API v0, TDP 26.2+. Only documented contract; tenant verification pending."
+  },
+  "x-provenance": {
+    "kind": "documentation-derived",
+    "source": "https://support.timextender.com/general-137/timextender-orchestration-api-3946",
+    "tenant_verified": false,
+    "ambiguities": [
+      "Common pagination says ALL list endpoints; applied to workspaces, map tasks and logs despite no per-endpoint pagination listing. Tenant validation required.",
+      "Log has no documented uat parameter; none invented.",
+      "Datetime values are local time; no RFC3339 timezone assumption."
+    ]
+  },
+  "servers": [
+    {
+      "url": "https://tenant.invalid",
+      "description": "Non-routable placeholder; configure actual tenant URL explicitly"
+    }
+  ],
+  "security": [
+    {
+      "ApiKey": []
+    }
+  ],
+  "components": {
+    "securitySchemes": {
+      "ApiKey": {
+        "type": "apiKey",
+        "in": "header",
+        "name": "X-API-Key",
+        "x-auth-env-vars": [
+          "TIMEXTENDER_API_KEY"
+        ]
+      }
+    },
+    "schemas": {
+      "Workspace": {
+        "type": "object",
+        "properties": {
+          "key": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string",
+            "nullable": true
+          }
+        }
+      },
+      "ProcessMap": {
+        "type": "object",
+        "properties": {
+          "processMapId": {
+            "type": "integer"
+          },
+          "name": {
+            "type": "string"
+          },
+          "workspace": {
+            "type": "string"
+          },
+          "lastExecutionDate": {
+            "type": "string",
+            "nullable": true,
+            "description": "Server local datetime; timezone unspecified by documentation"
+          },
+          "successfulTasks": {
+            "type": "integer"
+          },
+          "failedTasks": {
+            "type": "integer"
+          },
+          "runningTasks": {
+            "type": "integer"
+          },
+          "queuedTasks": {
+            "type": "integer"
+          },
+          "disabledTasks": {
+            "type": "integer"
+          }
+        }
+      },
+      "Task": {
+        "type": "object",
+        "properties": {
+          "taskId": {
+            "type": "integer"
+          },
+          "taskName": {
+            "type": "string"
+          },
+          "taskType": {
+            "type": "string",
+            "enum": [
+              "Query",
+              "CompareQuery",
+              "Rule",
+              "Package",
+              "ObjectGroup",
+              "Process",
+              "ScheduleGroup",
+              "TestGroup",
+              "OrchestrationMap",
+              "Link",
+              "EmailSummary"
+            ]
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "Finished",
+              "Failed",
+              "Running",
+              "Queued",
+              "Outdated",
+              "Disabled"
+            ]
+          },
+          "processMapId": {
+            "type": "integer",
+            "nullable": true
+          },
+          "processMapName": {
+            "type": "string",
+            "nullable": true
+          },
+          "lastExecutionStartTime": {
+            "type": "string",
+            "nullable": true,
+            "description": "Server local datetime; timezone unspecified by documentation"
+          },
+          "lastExecutionEndTime": {
+            "type": "string",
+            "nullable": true,
+            "description": "Server local datetime; timezone unspecified by documentation"
+          }
+        }
+      },
+      "LatestExecution": {
+        "type": "object",
+        "properties": {
+          "taskId": {
+            "type": "integer",
+            "nullable": true
+          },
+          "taskName": {
+            "type": "string"
+          },
+          "taskType": {
+            "type": "string",
+            "enum": [
+              "Query",
+              "CompareQuery",
+              "Rule",
+              "Package",
+              "ObjectGroup",
+              "Process",
+              "ScheduleGroup",
+              "TestGroup",
+              "OrchestrationMap",
+              "Link",
+              "EmailSummary"
+            ]
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "Finished",
+              "Failed",
+              "Running",
+              "Queued",
+              "Outdated",
+              "Disabled"
+            ]
+          },
+          "lastStartTime": {
+            "type": "string",
+            "nullable": true,
+            "description": "Server local datetime; timezone unspecified by documentation"
+          },
+          "lastEndTime": {
+            "type": "string",
+            "nullable": true,
+            "description": "Server local datetime; timezone unspecified by documentation"
+          },
+          "duration": {
+            "type": "string"
+          }
+        }
+      },
+      "Execution": {
+        "type": "object",
+        "properties": {
+          "executionId": {
+            "type": "integer"
+          },
+          "startTime": {
+            "type": "string",
+            "description": "Server local datetime; timezone unspecified by documentation"
+          },
+          "endTime": {
+            "type": "string",
+            "nullable": true,
+            "description": "Server local datetime; timezone unspecified by documentation"
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "Finished",
+              "Failed",
+              "Running"
+            ]
+          },
+          "durationSeconds": {
+            "type": "integer",
+            "nullable": true
+          }
+        }
+      },
+      "Log": {
+        "type": "object",
+        "properties": {
+          "logTime": {
+            "type": "string",
+            "description": "Server local datetime; timezone unspecified by documentation"
+          },
+          "log": {
+            "type": "string"
+          }
+        }
+      },
+      "Problem": {
+        "type": "object",
+        "properties": {
+          "type": {
+            "type": "string"
+          },
+          "title": {
+            "type": "string"
+          },
+          "status": {
+            "type": "integer"
+          },
+          "traceId": {
+            "type": "string"
+          }
+        }
+      }
+    }
+  },
+  "paths": {
+    "/api/v0/orchestration/workspaces": {
+      "get": {
+        "operationId": "timextender.orchestration.workspaces.list",
+        "tags": [
+          "workspaces"
+        ],
+        "summary": "workspaces list",
+        "description": "Source: https://support.timextender.com/general-137/timextender-orchestration-api-3946",
+        "externalDocs": {
+          "url": "https://support.timextender.com/general-137/timextender-orchestration-api-3946"
+        },
+        "parameters": [
+          {
+            "in": "query",
+            "name": "limit",
+            "schema": {
+              "type": "integer",
+              "default": 100,
+              "minimum": 1
+            },
+            "description": "Offset pagination; common ALL-list rule"
+          },
+          {
+            "in": "query",
+            "name": "offset",
+            "schema": {
+              "type": "integer",
+              "default": 0,
+              "minimum": 0
+            },
+            "description": "Items to skip"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Documented response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Workspace"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v0/orchestration/{workspace}/process-maps": {
+      "get": {
+        "operationId": "timextender.orchestration.maps.list",
+        "tags": [
+          "maps"
+        ],
+        "summary": "maps list",
+        "description": "Source: https://support.timextender.com/general-137/timextender-orchestration-api-3946",
+        "externalDocs": {
+          "url": "https://support.timextender.com/general-137/timextender-orchestration-api-3946"
+        },
+        "parameters": [
+          {
+            "in": "path",
+            "name": "workspace",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Workspace key; all supported only for process map and task lists"
+          },
+          {
+            "in": "query",
+            "name": "uat",
+            "schema": {
+              "type": "string",
+              "enum": [
+                "Production",
+                "PROD",
+                "Development",
+                "DEV",
+                "Test",
+                "TEST"
+              ],
+              "default": "Production"
+            },
+            "description": "Environment"
+          },
+          {
+            "in": "query",
+            "name": "limit",
+            "schema": {
+              "type": "integer",
+              "default": 100,
+              "minimum": 1
+            },
+            "description": "Offset pagination; common ALL-list rule"
+          },
+          {
+            "in": "query",
+            "name": "offset",
+            "schema": {
+              "type": "integer",
+              "default": 0,
+              "minimum": 0
+            },
+            "description": "Items to skip"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Documented response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/ProcessMap"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v0/orchestration/{workspace}/process-maps/{processMapId}/tasks": {
+      "get": {
+        "operationId": "timextender.orchestration.map-tasks.list",
+        "tags": [
+          "map-tasks"
+        ],
+        "summary": "map-tasks list",
+        "description": "Source: https://support.timextender.com/general-137/timextender-orchestration-api-3946",
+        "externalDocs": {
+          "url": "https://support.timextender.com/general-137/timextender-orchestration-api-3946"
+        },
+        "parameters": [
+          {
+            "in": "path",
+            "name": "workspace",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Workspace key; all supported only for process map and task lists"
+          },
+          {
+            "in": "path",
+            "name": "processMapId",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            },
+            "description": "processMapId"
+          },
+          {
+            "in": "query",
+            "name": "uat",
+            "schema": {
+              "type": "string",
+              "enum": [
+                "Production",
+                "PROD",
+                "Development",
+                "DEV",
+                "Test",
+                "TEST"
+              ],
+              "default": "Production"
+            },
+            "description": "Environment"
+          },
+          {
+            "in": "query",
+            "name": "limit",
+            "schema": {
+              "type": "integer",
+              "default": 100,
+              "minimum": 1
+            },
+            "description": "Offset pagination; common ALL-list rule"
+          },
+          {
+            "in": "query",
+            "name": "offset",
+            "schema": {
+              "type": "integer",
+              "default": 0,
+              "minimum": 0
+            },
+            "description": "Items to skip"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Documented response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Task"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v0/orchestration/{workspace}/process-maps/{processMapId}/trigger": {
+      "post": {
+        "operationId": "timextender.orchestration.map-trigger.start",
+        "tags": [
+          "map-trigger"
+        ],
+        "summary": "map-trigger start",
+        "description": "Source: https://support.timextender.com/general-137/timextender-orchestration-api-3946",
+        "externalDocs": {
+          "url": "https://support.timextender.com/general-137/timextender-orchestration-api-3946"
+        },
+        "parameters": [
+          {
+            "in": "path",
+            "name": "workspace",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Workspace key; all supported only for process map and task lists"
+          },
+          {
+            "in": "path",
+            "name": "processMapId",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            },
+            "description": "processMapId"
+          }
+        ],
+        "responses": {
+          "202": {
+            "description": "Accepted asynchronously; empty body; no completion or execution ID guaranteed"
+          }
+        },
+        "requestBody": {
+          "required": false,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "uat": {
+                    "type": "string",
+                    "enum": [
+                      "Production",
+                      "PROD",
+                      "Development",
+                      "DEV",
+                      "Test",
+                      "TEST"
+                    ],
+                    "default": "Production"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v0/orchestration/{workspace}/tasks": {
+      "get": {
+        "operationId": "timextender.orchestration.tasks.list",
+        "tags": [
+          "tasks"
+        ],
+        "summary": "tasks list",
+        "description": "Source: https://support.timextender.com/general-137/timextender-orchestration-api-3946",
+        "externalDocs": {
+          "url": "https://support.timextender.com/general-137/timextender-orchestration-api-3946"
+        },
+        "parameters": [
+          {
+            "in": "path",
+            "name": "workspace",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Workspace key; all supported only for process map and task lists"
+          },
+          {
+            "in": "query",
+            "name": "uat",
+            "schema": {
+              "type": "string",
+              "enum": [
+                "Production",
+                "PROD",
+                "Development",
+                "DEV",
+                "Test",
+                "TEST"
+              ],
+              "default": "Production"
+            },
+            "description": "Environment"
+          },
+          {
+            "in": "query",
+            "name": "limit",
+            "schema": {
+              "type": "integer",
+              "default": 100,
+              "minimum": 1
+            },
+            "description": "Offset pagination; common ALL-list rule"
+          },
+          {
+            "in": "query",
+            "name": "offset",
+            "schema": {
+              "type": "integer",
+              "default": 0,
+              "minimum": 0
+            },
+            "description": "Items to skip"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Documented response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Task"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v0/orchestration/{workspace}/tasks/{taskType}/{taskId}": {
+      "get": {
+        "operationId": "timextender.orchestration.task-details.get",
+        "tags": [
+          "task-details"
+        ],
+        "summary": "task-details get",
+        "description": "Source: https://support.timextender.com/general-137/timextender-orchestration-api-3946",
+        "externalDocs": {
+          "url": "https://support.timextender.com/general-137/timextender-orchestration-api-3946"
+        },
+        "parameters": [
+          {
+            "in": "path",
+            "name": "workspace",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Workspace key; all supported only for process map and task lists"
+          },
+          {
+            "in": "path",
+            "name": "taskType",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "Query",
+                "CompareQuery",
+                "Rule",
+                "Package",
+                "ObjectGroup",
+                "Process",
+                "ScheduleGroup",
+                "TestGroup",
+                "OrchestrationMap",
+                "Link",
+                "EmailSummary"
+              ]
+            },
+            "description": "taskType"
+          },
+          {
+            "in": "path",
+            "name": "taskId",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            },
+            "description": "taskId"
+          },
+          {
+            "in": "query",
+            "name": "uat",
+            "schema": {
+              "type": "string",
+              "enum": [
+                "Production",
+                "PROD",
+                "Development",
+                "DEV",
+                "Test",
+                "TEST"
+              ],
+              "default": "Production"
+            },
+            "description": "Environment"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Documented response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Task"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v0/orchestration/{workspace}/tasks/{taskType}/{taskId}/trigger": {
+      "post": {
+        "operationId": "timextender.orchestration.task-trigger.start",
+        "tags": [
+          "task-trigger"
+        ],
+        "summary": "task-trigger start",
+        "description": "Source: https://support.timextender.com/general-137/timextender-orchestration-api-3946",
+        "externalDocs": {
+          "url": "https://support.timextender.com/general-137/timextender-orchestration-api-3946"
+        },
+        "parameters": [
+          {
+            "in": "path",
+            "name": "workspace",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Workspace key; all supported only for process map and task lists"
+          },
+          {
+            "in": "path",
+            "name": "taskType",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "Query",
+                "CompareQuery",
+                "Rule",
+                "Package",
+                "ObjectGroup",
+                "Process",
+                "ScheduleGroup",
+                "TestGroup",
+                "OrchestrationMap",
+                "Link",
+                "EmailSummary"
+              ]
+            },
+            "description": "taskType"
+          },
+          {
+            "in": "path",
+            "name": "taskId",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            },
+            "description": "taskId"
+          }
+        ],
+        "responses": {
+          "202": {
+            "description": "Accepted asynchronously; empty body; no completion or execution ID guaranteed"
+          }
+        },
+        "requestBody": {
+          "required": false,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "uat": {
+                    "type": "string",
+                    "enum": [
+                      "Production",
+                      "PROD",
+                      "Development",
+                      "DEV",
+                      "Test",
+                      "TEST"
+                    ],
+                    "default": "Production"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v0/orchestration/{workspace}/executions": {
+      "get": {
+        "operationId": "timextender.orchestration.executions.list",
+        "tags": [
+          "executions"
+        ],
+        "summary": "executions list",
+        "description": "Source: https://support.timextender.com/general-137/timextender-orchestration-api-3946",
+        "externalDocs": {
+          "url": "https://support.timextender.com/general-137/timextender-orchestration-api-3946"
+        },
+        "parameters": [
+          {
+            "in": "path",
+            "name": "workspace",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Workspace key; all supported only for process map and task lists"
+          },
+          {
+            "in": "query",
+            "name": "uat",
+            "schema": {
+              "type": "string",
+              "enum": [
+                "Production",
+                "PROD",
+                "Development",
+                "DEV",
+                "Test",
+                "TEST"
+              ],
+              "default": "Production"
+            },
+            "description": "Environment"
+          },
+          {
+            "in": "query",
+            "name": "limit",
+            "schema": {
+              "type": "integer",
+              "default": 100,
+              "minimum": 1
+            },
+            "description": "Offset pagination; common ALL-list rule"
+          },
+          {
+            "in": "query",
+            "name": "offset",
+            "schema": {
+              "type": "integer",
+              "default": 0,
+              "minimum": 0
+            },
+            "description": "Items to skip"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Documented response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/LatestExecution"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v0/orchestration/{workspace}/tasks/{taskType}/{taskId}/executions": {
+      "get": {
+        "operationId": "timextender.orchestration.history.list",
+        "tags": [
+          "history"
+        ],
+        "summary": "history list",
+        "description": "Source: https://support.timextender.com/general-137/timextender-orchestration-api-3946",
+        "externalDocs": {
+          "url": "https://support.timextender.com/general-137/timextender-orchestration-api-3946"
+        },
+        "parameters": [
+          {
+            "in": "path",
+            "name": "workspace",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Workspace key; all supported only for process map and task lists"
+          },
+          {
+            "in": "path",
+            "name": "taskType",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "Query",
+                "CompareQuery",
+                "Rule",
+                "Package",
+                "ObjectGroup",
+                "Process",
+                "ScheduleGroup",
+                "TestGroup",
+                "OrchestrationMap",
+                "Link",
+                "EmailSummary"
+              ]
+            },
+            "description": "taskType"
+          },
+          {
+            "in": "path",
+            "name": "taskId",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            },
+            "description": "taskId"
+          },
+          {
+            "in": "query",
+            "name": "uat",
+            "schema": {
+              "type": "string",
+              "enum": [
+                "Production",
+                "PROD",
+                "Development",
+                "DEV",
+                "Test",
+                "TEST"
+              ],
+              "default": "Production"
+            },
+            "description": "Environment"
+          },
+          {
+            "in": "query",
+            "name": "limit",
+            "schema": {
+              "type": "integer",
+              "default": 50,
+              "minimum": 1
+            },
+            "description": "Offset pagination; common ALL-list rule"
+          },
+          {
+            "in": "query",
+            "name": "offset",
+            "schema": {
+              "type": "integer",
+              "default": 0,
+              "minimum": 0
+            },
+            "description": "Items to skip"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Documented response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Execution"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v0/orchestration/{workspace}/tasks/{taskType}/{taskId}/executions/{execId}/log": {
+      "get": {
+        "operationId": "timextender.orchestration.logs.list",
+        "tags": [
+          "logs"
+        ],
+        "summary": "logs list",
+        "description": "Source: https://support.timextender.com/general-137/timextender-orchestration-api-3946",
+        "externalDocs": {
+          "url": "https://support.timextender.com/general-137/timextender-orchestration-api-3946"
+        },
+        "parameters": [
+          {
+            "in": "path",
+            "name": "workspace",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Workspace key; all supported only for process map and task lists"
+          },
+          {
+            "in": "path",
+            "name": "taskType",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "Query",
+                "CompareQuery",
+                "Rule",
+                "Package",
+                "ObjectGroup",
+                "Process",
+                "ScheduleGroup",
+                "TestGroup",
+                "OrchestrationMap",
+                "Link",
+                "EmailSummary"
+              ]
+            },
+            "description": "taskType"
+          },
+          {
+            "in": "path",
+            "name": "taskId",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            },
+            "description": "taskId"
+          },
+          {
+            "in": "path",
+            "name": "execId",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            },
+            "description": "execId"
+          },
+          {
+            "in": "query",
+            "name": "limit",
+            "schema": {
+              "type": "integer",
+              "default": 100,
+              "minimum": 1
+            },
+            "description": "Offset pagination; common ALL-list rule"
+          },
+          {
+            "in": "query",
+            "name": "offset",
+            "schema": {
+              "type": "integer",
+              "default": 0,
+              "minimum": 0
+            },
+            "description": "Items to skip"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Documented response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Log"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "x-category": "developer-tools",
+  "x-mcp": {
+    "transport": [
+      "stdio"
+    ],
+    "orchestration": "endpoint-mirror"
+  },
+  "x-learn": {
+    "entity_lookup_seeds": {
+      "environment": [
+        {
+          "canonical": "Production",
+          "aliases": [
+            "PROD"
+          ]
+        },
+        {
+          "canonical": "Development",
+          "aliases": [
+            "DEV"
+          ]
+        },
+        {
+          "canonical": "Test",
+          "aliases": [
+            "TEST"
+          ]
+        }
+      ]
+    }
+  }
+}
